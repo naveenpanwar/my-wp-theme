@@ -180,3 +180,21 @@ h6, .h6 {
 .blog-footer p:last-child {
   margin-bottom: 0;
 }
+
+/* Adding some tweak to styles */
+
+.blog-nav li {
+    position: relative;
+    display: inline-block;
+    padding: 10px;
+    font-weight: 500;	
+}
+.blog-nav li a {
+    color: #fff;
+}
+
+/* Image in posts contain width */
+.blog-main .blog-post .row img {
+	max-width: 100%;
+	max-height: 100%;
+}

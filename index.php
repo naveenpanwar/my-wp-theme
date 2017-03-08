@@ -4,17 +4,18 @@
   <div class="col-sm-8 blog-main">
 
     <?php
-        if ( have_posts() ): while ( have_posts() ): the_post();
+      if ( have_posts() ): while ( have_posts() ): the_post();
             get_template_part('content', get_post_format());
-        endwhile; endif;
-    ?>
+        endwhile; ?>
 
-    <nav>
-      <ul class="pager">
-        <li><a href="#">Previous</a></li>
-        <li><a href="#">Next</a></li>
-      </ul>
-    </nav>
+        <nav>
+          <ul class="pager">
+            <li><?php previous_posts_link("Newer posts"); ?></li>
+            <li><?php next_posts_link("Older posts"); ?></li>
+          </ul>
+        </nav> 
+
+     <?php endif; ?>
 
   </div><!-- /.blog-main -->
   <?php get_sidebar(); ?>

@@ -8,14 +8,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-	<title><?php echo get_bloginfo('name'); ?></title>
+    <!-- Bootstrap core CSS enqueued in functions.php -->
 
-    <!-- Bootstrap core CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-	<link href="<?php bloginfo('template_directory');?>/style.css" rel="stylesheet">
-
+    <!-- Custom styles for this template are enqueued in functions.php -->
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -30,7 +25,7 @@
     <div class="blog-masthead">
       <div class="container">
         <nav class="blog-nav">
-          <a class="blog-nav-item active" href="#">Home</a>
+        <a class="blog-nav-item active" href="<?php bloginfo('wpurl'); ?>"><?php echo get_bloginfo('name'); ?></a>
           <?php wp_list_pages('&title_li='); ?>
         </nav>
       </div>
