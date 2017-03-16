@@ -80,22 +80,111 @@
   // Custom Post Type
   function create_stores_post() {
     register_post_type( 'stores-post',
-        array(
-        'labels' => array(
-            'name' => __( 'Stores' ),
-            'singular_name' => __( 'Store' ),
-        ),
-        'public' => true,
-        'has_archive' => true,
-        'supports' => array(
-            'title',
-            'editor',
-            'thumbnail',
-            'custom-fields'
-        )
+      array(
+      'labels' => array(
+        'name' => __( 'Stores' ),
+        'singular_name' => __( 'Store' ),
+      ),
+      'public' => true,
+      'hierarchical' => true,
+      'has_archive' => true,
+      'supports' => array(
+        'title',
+        'editor',
+        'excerpt',
+        'thumbnail',
+      ),
+      'taxonomier' => array(
+        'category',
+        'post_tag',
+      )
     ));
+    register_taxonomy_for_object_type('category', 'stores-post');
+    register_taxonomy_for_object_type('post_tag', 'stores-post');
   }
 
   add_action( 'init', 'create_stores_post' );
+
+  function add_store_fields_meta_box() {
+    add_meta_box(
+      'store_fields_meta_box', // $id
+      'Store Fields', // $title
+      'show_store_fields_meta_box', // $callback
+      'stores-post', // $screen
+      'normal', // $context
+      'high' // $priority
+    );
+  }
+  
+  add_action( 'add_meta_boxes', 'add_store_fields_meta_box' );
+
+  function show_store_fields_meta_box() {
+    global $post;
+    $meta = get_post_meta($post->ID, 'store_fields', true); ?>
+    
+    <input type="hidden" name="store_meta_box_nonce" value="<?php echo wp_create_nonce( basename(__FILE__) ); ?>">
+
+    <!-- All fields will go here -->
+    <p>
+      <label for="store_fields[shop_name]">Shop Name</label>
+      <br>
+      <input type="text" name="store_fields[shop_name]" id="store_fields[shop_name]" class="regular-text" value="<?php echo $meta['shop_name']; ?>">
+    </p>
+    <p>
+      <label for="store_fields[address]">Address</label>
+      <br>
+      <textarea name="store_fields[address]" id="store_fields[address]" rows="5" cols="30" style="width:500px;"><?php echo $meta['address']; ?></textarea>
+    </p>
+
+    <p>
+      <label for="store_fields[country]">Country</label>
+      <br>
+      <select name="store_fields[country]" id="store_fields[country]">
+          <option value="denmark" <?php selected( $meta['country'], 'denmark' ); ?>>Denmark</option>
+          <option value="sweden" <?php selected( $meta['country'], 'sweden' ); ?>>Sweden</option>
+      </select>
+    </p>
+
+    <p>
+      <label for="store_fields[city]">City</label>
+      <br>
+      <select name="store_fields[city]" id="store_fields[city]">
+          <option value="aarhus" <?php selected( $meta['city'], 'aarhus' ); ?>>Aarhus</option>
+          <option value="copenhagen" <?php selected( $meta['city'], 'copenhagen' ); ?>>Copenhagen</option>
+      </select>
+    </p>
+
+  <?php }
+
+  function save_store_fields_meta( $post_id ) {
+    // verify nonce
+    if ( !wp_verify_nonce( $_POST['store_meta_box_nonce'], basename(__FILE__) ) ) {
+      return $post_id; 
+    }
+    // check autosave
+    if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+      return $post_id;
+    }
+    // check permissions
+    if ( 'page' === $_POST['post_type'] ) {
+      if ( !current_user_can( 'edit_page', $post_id ) ) {
+        return $post_id;
+      } elseif ( !current_user_can( 'edit_post', $post_id ) ) {
+        return $post_id;
+      }  
+    }
+    
+    $old = get_post_meta( $post_id, 'store_fields', true );
+    $new = $_POST['store_fields'];
+
+    if ( $new && $new !== $old ) {
+      update_post_meta( $post_id, 'store_fields', $new );
+    } elseif ( '' === $new && $old ) {
+      delete_post_meta( $post_id, 'store_fields', $old );
+    }
+  }
+  add_action( 'save_post', 'save_store_fields_meta' );
+
+  
 
 ?>
