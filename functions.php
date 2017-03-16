@@ -128,20 +128,20 @@
     <p>
       <label for="store_fields[shop_name]">Shop Name</label>
       <br>
-      <input type="text" name="store_fields[shop_name]" id="store_fields[shop_name]" class="regular-text" value="<?php echo $meta['shop_name']; ?>">
+      <input type="text" name="store_fields[shop_name]" id="store_fields[shop_name]" class="regular-text" value="<?php echo isset($meta['shop_name']); ?>">
     </p>
     <p>
       <label for="store_fields[address]">Address</label>
       <br>
-      <textarea name="store_fields[address]" id="store_fields[address]" rows="5" cols="30" style="width:500px;"><?php echo $meta['address']; ?></textarea>
+      <textarea name="store_fields[address]" id="store_fields[address]" rows="5" cols="30" style="width:500px;"><?php echo isset($meta['address']); ?></textarea>
     </p>
 
     <p>
       <label for="store_fields[country]">Country</label>
       <br>
       <select name="store_fields[country]" id="store_fields[country]">
-          <option value="denmark" <?php selected( $meta['country'], 'denmark' ); ?>>Denmark</option>
-          <option value="sweden" <?php selected( $meta['country'], 'sweden' ); ?>>Sweden</option>
+          <option value="denmark" <?php selected( isset($meta['country']), 'denmark' ); ?>>Denmark</option>
+          <option value="sweden" <?php selected( isset($meta['country']), 'sweden' ); ?>>Sweden</option>
       </select>
     </p>
 
@@ -149,8 +149,8 @@
       <label for="store_fields[city]">City</label>
       <br>
       <select name="store_fields[city]" id="store_fields[city]">
-          <option value="aarhus" <?php selected( $meta['city'], 'aarhus' ); ?>>Aarhus</option>
-          <option value="copenhagen" <?php selected( $meta['city'], 'copenhagen' ); ?>>Copenhagen</option>
+          <option value="aarhus" <?php selected( isset($meta['city']), 'aarhus' ); ?>>Aarhus</option>
+          <option value="copenhagen" <?php selected( isset($meta['city']), 'copenhagen' ); ?>>Copenhagen</option>
       </select>
     </p>
 
@@ -158,7 +158,7 @@
 
   function save_store_fields_meta( $post_id ) {
     // verify nonce
-    if ( !wp_verify_nonce( $_POST['store_meta_box_nonce'], basename(__FILE__) ) ) {
+    if ( !wp_verify_nonce( isset($_POST['store_meta_box_nonce']), basename(__FILE__) ) ) {
       return $post_id; 
     }
     // check autosave
